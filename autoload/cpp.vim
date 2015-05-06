@@ -1,68 +1,105 @@
-" Copyright 2012-2015 Richard Russon (flatcap)
-" Make and display the quickfix window if necessary
-" Mark ctor, dtor, #include, class
-" Create a C function comment
+" cpp.vim - Autoload scripts for c/cpp
+" Author:       Rich Russon (flatcap) <rich@flatcap.org>
+" Website:      https://flatcap.org
+" Copyright:    2012-2015 Richard Russon
+" License:      GPLv3 <http://fsf.org/>
+" Version:      1.0
 
-function! cpp#classname()
-	let cursor_pos = getpos('.')
+function! s:log_error (msg)
+	echohl Error
+	echomsg a:msg
+	echohl None
+endfunction
 
-	let suffix = expand ("%:e")
-	if (suffix == 'h')
-		" Class
-		call cursor(1,1)
-		if (search ('^class\>.*[^;]$', 'cW', 0, 100) > 0)
-			let class = getline('.')
-			let @c = substitute(class, 'class\s\+\(\i\+\).*', '\1', '')
-		else
-			let @c = ''
-		endif
+function! s:log_info (msg)
+	echohl CursorLine
+	echomsg a:msg
+	echohl None
+endfunction
+
+function! s:mark_regex (mark, regex, forwards)
+	let cursor_pos = getpos ('.')
+
+	" c: accept match at cursor
+	" W: don't wrap around
+	let l:flags = 'cW'
+	if (a:forwards)
+		call cursor (1,1)
+		let l:stop = 100
 	else
-		" Constructor
-		call cursor(1,1)
-		if (search ('\v^(\i+)::\1\s*\(', 'cW', 0, 100) > 0)
-			let class = getline('.')
-			let @c = substitute(class, ':.*', '', '')
-		else
-			let @c = ''
-		endif
+		call cursor (100,1)
+		let l:stop = 1
+		" b: search backwards
+		let l:flags .= 'b'
 	endif
-	let b:class = @c
+
+	let l:success = 0
+	if (search (a:regex, l:flags, l:stop, 50) > 0)
+		call setpos ("'" . a:mark, getpos ('.'))
+		let l:success = 1
+	endif
 
 	call setpos ('.', cursor_pos)
-
-	XXX return b:class
+	return l:success
 endfunction
 
-function! s:get_function_name()
-	return substitute (getline ('.'), '^.*\%(\s\+\|::\)\(\~\=\w\+\) *(.*', '\1', '')
-endfunction
 
 function! cpp#AddCommentBlock()
-	let f = s:get_function_name()
+	" Create a C function comment
+	let l:func = s:get_function_name()
 
 	let @" =  "/**\n" .
-		\ " * " . f . "\n" .
+		\ ' * ' . l:func . "\n" .
 		\ " */\n"
 
 	execute 'normal ""P3j'
 endfunction
 
-function! cpp#Ifdef(...) range
-	if (a:0 == 0)
-		let ifdef = "#if 0"
+function! cpp#GetClassName()
+	let l:cursor_pos = getpos ('.')
+
+	let l:suffix = expand ('%:e')
+	let l:name = ''
+	if ((l:suffix == 'h') || (l:suffix == 'hpp'))
+		" Header file - search for class definition
+		call cursor (1,1)
+		if (search ('^class\>.*[^;]$', 'cW', 0, 100) > 0)
+			let l:class = getline ('.')
+			let l:name = substitute (l:class, 'class\s\+\(\i\+\).*', '\1', '')
+		endif
 	else
-		let ifdef = "#ifdef " . a:1
+		" Source file - search for constructor
+		call cursor (1,1)
+		if (search ('\v^(\i+)::\1\s*\(', 'cW', 0, 100) > 0)
+			let l:class = getline ('.')
+			let l:name = substitute (l:class, ':.*', '', '')
+		endif
 	endif
-	call append (a:lastline, "#endif")
-	call append (a:firstline-1, ifdef)
+
+	call setpos ('.', l:cursor_pos)
+
+	return l:name
+endfunction
+
+function! cpp#GetFunctionName()
+	return substitute (getline ('.'), '^.*\%(\s\+\|::\)\(\~\=\w\+\) *(.*', '\1', '')
+endfunction
+
+function! cpp#Ifdef (...) range
+	if (a:0 == 0)
+		let l:ifdef = '#if 0'
+	else
+		let l:ifdef = '#ifdef ' . a:1
+	endif
+	call append (a:lastline, '#endif')
+	call append (a:firstline-1, l:ifdef)
 	call cursor (a:lastline+1, 0)
 endfunction
 
-function! cpp#RichMake()
+function! cpp#Make()
+	" Make and display the quickfix window if necessary
 	if (!filereadable ('Makefile') && !filereadable ('makefile'))
-		echohl Error
-		echomsg 'No Makefile'
-		echohl None
+		log_error ('No Makefile')
 		return
 	endif
 
@@ -71,66 +108,50 @@ function! cpp#RichMake()
 	execute 'wincmd t'
 	execute 'silent make | redraw!'
 	if (v:shell_error != 0)
-		echohl Error
-		echomsg 'make failed'
-		echohl None
+		log_error 'make failed'
 		return
 	endif
 	execute 'botright cwindow 5'
 
-	let num = bufnr ('$')
-	let b = 1
-	let success = 1
-	while b <= num
-		if (bufexists (b))
-			if (getbufvar (b, "&buftype") == "quickfix")
-				execute "cc"
-				execute "normal zvzz"
-				let success = 0
+	let l:buf_count = bufnr ('$')
+	let l:b = 1
+	let l:success = 1
+	while l:b <= l:buf_count
+		if (bufexists (l:b))
+			if (getbufvar (l:b, '&buftype') == 'quickfix')
+				execute 'cc'
+				execute 'normal zvzz'
+				let l:success = 0
 				break
 			endif
 		endif
 
-		let b = b + 1
+		let l:b += 1
 	endwhile
 
-	if (success)
-		echohl CursorLine
-		echom "make successful"
-		echohl None
+	if (l:success)
+		log_info ('make successful')
 	endif
 endfunction
 
-function DUMMY()
-	let cursor_pos = getpos('.')
-
-	let suffix = expand ("%:e")
-	if (suffix == 'h')
-		" Class
-		call cursor(1,1)
-		if (search ('^class\>.*', 'cW', 0, 100) > 0)
-			call setpos ("'c", getpos('.'))
-		endif
+function cpp#MarkImportant()
+	" Mark ctor, dtor, #include, class
+	let l:suffix = expand ('%:e')
+	if ((l:suffix == 'h') || (l:suffix == 'hpp'))
+		" Header file - search for class definition
+		call s:mark_regex ('c', '^class\>.*', 1)
 	else
-		" Constructor
-		call cursor(1,1)
-		if (search ('\v^(\i+)::\1\s*\(', 'cW', 0, 100) > 0)
-			call setpos ("'c", getpos('.'))
-		endif
+		" Source file - search for constructor
+		call s:mark_regex ('c', '\v^(\i+)::\1\s*\(', 1)
 
-		" Destructor
-		call cursor(1,1)
-		if (search ('\v^(\i+)::\~\1\s*\(', 'cW', 0, 100) > 0)
-			call setpos ("'d", getpos('.'))
-		endif
+		" Source file - search for destructor
+		call s:mark_regex ('d', '\v^(\i+)::\~\1\s*\(', 1)
 	endif
 
-	" #include
-	call cursor(200,0)
-	if (search ('\v^#include', 'bcW', 0, 50) > 0)
-		call setpos ("'i", getpos('.'))
+	" Search for last #include
+	call s:mark_regex ('i', '\v^#include', 0)
+	if (exists (':SignatureRefresh'))
+		execute ':SignatureRefresh'
 	endif
-
-	call setpos ('.', cursor_pos)
-
 endfunction
+
