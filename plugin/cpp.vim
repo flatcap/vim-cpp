@@ -1,9 +1,10 @@
+finish
+
 let g:rich_wip += 1
 echohl error
 echom printf ('seq %d, file %s', g:rich_wip, expand('<sfile>:p'))
 echohl none
 
-finish
 autocmd BufNewFile,BufRead *.c,*.h,*.cc,*.cpp source ~/.vim/fold/c.vim
 
 if ((hostname() == 'laptop.flatcap.org') && (expand('$USER') == 'flatcap'))
