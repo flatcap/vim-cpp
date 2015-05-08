@@ -1,7 +1,5 @@
 " Copyright 2001-2015 Richard Russon.
 
-source ~/.vim/fold/deffold.vim
-
 let s:prefix_comment   = '--> '
 let s:prefix_function  = 'F)'
 let s:abbreviation     = '...'
@@ -19,7 +17,7 @@ let s:function_static	= '∗'
 "     count the number of function parameters (@arg)
 "     look for keywords like: static, inline, etc
 
-function! C_FoldCtor (text)
+function! s:FoldCtor (text)
 	let class = substitute (a:text, '::.*', '\1', '')
 	let ctor  = substitute (a:text, '^\(.*\)::\1\s*', '', '')
 
@@ -36,7 +34,7 @@ function! C_FoldCtor (text)
 	return s:prefix_ctor ." (" . ctor . ")"
 endfunction
 
-function! C_FoldOperator (text)
+function! s:FoldOperator (text)
 	let class = substitute (a:text, '::.*', '\1', '')
 	let oper  = substitute (a:text, '^\i\+::\(\S\+\).*', '\1', '')
 	let args  = substitute (a:text, '^[^(]\+', '', '')
@@ -52,7 +50,7 @@ function! C_FoldOperator (text)
 	return oper . " (" . type . ")"
 endfunction
 
-function! C_FoldFunction(lnum)
+function! s:FoldFunction(lnum)
 	let text = "Function!"
 	let static = 0
 	for i in range(0,4)
@@ -70,9 +68,9 @@ function! C_FoldFunction(lnum)
 		let text = substitute (line, '\s*(.*', '', '')
 
 		if (text =~ '^\C\(.*\)::\1')
-			let text = C_FoldCtor (line)
+			let text = s:FoldCtor (line)
 		elseif (text =~ '^\C\(.*\)::operator.*')
-			let text = C_FoldOperator (line)
+			let text = s:FoldOperator (line)
 		elseif (text =~ '^\C\(.*\)::swap')
 			let text = 'swap (member)'
 		elseif (text =~ '^\(.*\)::\~\1')
@@ -95,7 +93,7 @@ function! C_FoldFunction(lnum)
 	return text
 endfunction
 
-function! C_FoldGetFunctionIcon(lnum)
+function! s:FoldGetFunctionIcon(lnum)
 
 	for i in range(a:lnum,a:lnum+20)
 		let line = getline(i)
@@ -117,7 +115,7 @@ function! C_FoldGetFunctionIcon(lnum)
 	return s:prefix_function
 endfunction
 
-function! C_FoldCopyright(lnum)
+function! s:FoldCopyright(lnum)
 	if (&foldlevel < 2)
 		return s:prefix_copyright
 	endif
@@ -127,7 +125,7 @@ function! C_FoldCopyright(lnum)
 	return s:prefix_copyright . ' ' . line
 endfunction
 
-function! C_FoldComment(lnum)
+function! s:FoldComment(lnum)
 	let list = []
 	let line = getline (a:lnum)
 
@@ -174,7 +172,7 @@ function! C_FoldComment(lnum)
 	return result
 endfunction
 
-function! C_FoldInclude(line, count)
+function! s:FoldInclude(line, count)
 	if (&foldlevel < 2)
 		return '#include'
 	endif
@@ -191,7 +189,8 @@ function! C_FoldInclude(line, count)
 	return text
 endfunction
 
-function! C_FoldLevel(lnum)
+
+function! cpp_fold#FoldLevel(lnum)
 	let prev = getline (a:lnum - 1)
 	let line = getline (a:lnum)
 	let next = getline (a:lnum + 1)
@@ -277,7 +276,7 @@ function! C_FoldLevel(lnum)
 	return level
 endfunction
 
-function! C_FoldText(lnum)
+function! cpp_fold#FoldText(lnum)
 	let prev = getline (a:lnum - 1)
 	let line = getline (a:lnum)
 	let next = getline (a:lnum + 1)
@@ -286,16 +285,16 @@ function! C_FoldText(lnum)
 
 	if (line =~ "^#include.*")
 		let s = v:foldend - v:foldstart
-		return C_FoldInclude(line, s)
+		return s:FoldInclude(line, s)
 	endif
 
 	if ((line =~ '^/\* Copyright.*'))
-		let text = C_FoldCopyright(a:lnum)
+		let text = s:FoldCopyright(a:lnum)
 		return text
 	endif
 
 	if (line =~ '^\s\+/\*.*')
-		return C_FoldComment (a:lnum)
+		return s:FoldComment (a:lnum)
 	endif
 
 	if ((line =~ '^public:') || (line =~ '^protected:') || (line =~ '^private:'))
@@ -311,15 +310,11 @@ function! C_FoldText(lnum)
 	if (line =~ '^/\*\*$')
 		" Function block
 		let next = substitute (next, '^\s\+\*\s*', '', '')
-		let icon = C_FoldGetFunctionIcon (v:foldstart+1)
+		let icon = s:FoldGetFunctionIcon (v:foldstart+1)
 		return icon . ' ' . next
 	endif
 
-	return C_FoldFunction(a:lnum)
+	return s:FoldFunction(a:lnum)
 endfunction
 
-
-" Enable folding.
-set foldexpr=C_FoldLevel(v:lnum)
-set foldtext=C_FoldText(v:foldstart)
 

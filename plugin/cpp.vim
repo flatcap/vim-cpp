@@ -1,8 +1,7 @@
 finish
 
-let g:rich_wip += 1
 echohl error
-echom printf ('seq %d, file %s', g:rich_wip, expand('<sfile>:p'))
+echom printf ('file %s', expand('<sfile>:p'))
 echohl none
 
 autocmd BufNewFile,BufRead *.c,*.h,*.cc,*.cpp source ~/.vim/fold/c.vim

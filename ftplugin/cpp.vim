@@ -6,9 +6,8 @@ finish
 " endif
 " let b:did_ftplugin = 1
 
-let g:rich_wip += 1
 echohl error
-echom printf ('seq %d, file %s', g:rich_wip, expand('<sfile>:p'))
+echom printf ('file %s', expand('<sfile>:p'))
 echohl none
 
 setlocal ts=4 sw=4 et
@@ -20,4 +19,8 @@ map <buffer> <LocalLeader><tab>  :echom 'hello'<CR>
 " map <buffer> <LocalLeader>A  oanother line<Esc>
 
 " imap \c =(exists ('b:class') ? b:class : '')<cr>
+
+" Enable folding.
+setlocal foldexpr=C_FoldLevel(v:lnum)
+setlocal foldtext=C_FoldText(v:foldstart)
 
