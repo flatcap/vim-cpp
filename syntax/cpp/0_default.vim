@@ -1,47 +1,12 @@
 " source ~/.vim/fold/c.vim
 
-setlocal path=.
-setlocal path+=/usr/include
-setlocal path+=/usr/include/at-spi2-atk/2.0
-setlocal path+=/usr/include/atk-1.0
-setlocal path+=/usr/include/atkmm-1.6
-setlocal path+=/usr/include/c++/4.8.2/
-setlocal path+=/usr/include/cairo
-setlocal path+=/usr/include/cairomm-1.0
-setlocal path+=/usr/include/freetype2
-setlocal path+=/usr/include/gdk-pixbuf-2.0
-setlocal path+=/usr/include/gdkmm-3.0
-setlocal path+=/usr/include/gio-unix-2.0/
-setlocal path+=/usr/include/giomm-2.4
-setlocal path+=/usr/include/glib-2.0
-setlocal path+=/usr/include/glibmm-2.4
-setlocal path+=/usr/include/gtk-3.0
-setlocal path+=/usr/include/gtk-3.0/unix-print
-setlocal path+=/usr/include/gtkmm-3.0
-setlocal path+=/usr/include/harfbuzz
-setlocal path+=/usr/include/libdrm
-setlocal path+=/usr/include/libpng16
-setlocal path+=/usr/include/pango-1.0
-setlocal path+=/usr/include/pangomm-1.4
-setlocal path+=/usr/include/pixman-1
-setlocal path+=/usr/include/sigc++-2.0
-setlocal path+=/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include
-setlocal path+=/usr/lib64/cairomm-1.0/include
-setlocal path+=/usr/lib64/gdkmm-3.0/include
-setlocal path+=/usr/lib64/giomm-2.4/include
-setlocal path+=/usr/lib64/glib-2.0/include
-setlocal path+=/usr/lib64/glibmm-2.4/include
-setlocal path+=/usr/lib64/gtkmm-3.0/include
-setlocal path+=/usr/lib64/pangomm-1.4/include
-setlocal path+=/usr/lib64/sigc++-2.0/include
-
+setlocal   cindent
+setlocal   commentstring=//%s
 setlocal noexpandtab
-setlocal shiftwidth=8
-setlocal tabstop=8
-setlocal suffixesadd=.h
-setlocal commentstring=//%s
+setlocal   shiftwidth=8
+setlocal   suffixesadd=.h
+setlocal   tabstop=8
 
-setlocal cindent
 " setlocal cinoptions={.5s,:.5s,+.5s,t0,g0,^-2,e-2,n-2,p2s,(0,=.5s
 " setlocal cinoptions=>4,n-2,{2,^-2,:2,=2,g0,h2,p5,t0,+2,(0,u0,w1,m1
 " setlocal cinoptions=>4,{1s,n-2,}0,t0,^-2
