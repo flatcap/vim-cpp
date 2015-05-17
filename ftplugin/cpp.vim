@@ -1,3 +1,10 @@
+if exists("b:did_ftplugin")
+	finish
+endif
+let b:did_ftplugin = 1
+
+let g:c_space_errors=1
+
 " Enable folding.
 setlocal foldmethod=expr
 setlocal foldexpr=cpp_fold#FoldLevel(v:lnum)
@@ -10,13 +17,9 @@ setlocal foldopen+=tag
 setlocal foldopen+=quickfix
 "setlocal foldopen+=search
 
-let b:class = cpp#GetClassName()
-
-inoremap <silent> <buffer> \c =(exists ('b:class') ? b:class : '')<cr>
-
 " More preferences
 let s:path = expand("%:p")
-if (s:path =~ '/upstream/')
+if ((s:path =~ '/upstream/') || (s:path =~ '^/usr/include/'))
 	setlocal foldlevel=4
 	setlocal conceallevel=0
 else
@@ -30,53 +33,42 @@ else
 	endif
 endif
 
-finish
+augroup RichCpp
+	autocmd!
+	" If there's an error in my STL use, there's little point staring at the source
+	autocmd BufRead /usr/include/c++/4.9.2/*  setlocal filetype=cpp syntax=cpp bufhidden=delete
+	autocmd BufRead /usr/include/sigc++-2.0/* setlocal filetype=cpp syntax=cpp bufhidden=delete
+augroup END
 
-" Only do this when not done yet for this buffer
-" if exists("b:did_ftplugin")
-" 	finish
-" endif
-" let b:did_ftplugin = 1
+let b:class = cpp#GetClassName()
 
-let maplocalleader = ';'
-
-" map <buffer> <LocalLeader>A  oanother line<Esc>
-
-" imap \c =(exists ('b:class') ? b:class : '')<cr>
-
+inoremap <silent> <buffer> \c =(exists ('b:class') ? b:class : '')<cr>
 " \f for filename
 " \x for exchanged cpp <-> h
 " \b for base class (HOW?)
-
 " what else?
 " can't clash with real escapes \e \n \t
 
-autocmd BufNewFile,BufRead *.c,*.h,*.cc,*.cpp source ~/.vim/fold/c.vim
+let maplocalleader = '\'
 
-" If there's an error in my STL use, there's little point staring at the source
-autocmd BufRead /usr/include/*            setlocal foldlevel=4
-autocmd BufRead /usr/include/c++/4.9.2/*  setlocal syntax=c bufhidden=delete
-autocmd BufRead /usr/include/sigc++-2.0/* setlocal syntax=c bufhidden=delete
+nmap <silent> <buffer> <LocalLeader>fc :<c-u>silent! call cpp#AddCommentBlock()<CR>
+" nmap <silent> <buffer> <LocalLeader>ff :<c-u>silent! source ~/.vim/fold/c.vim<CR>
 
-nmap <silent> <LocalLeader>fc :silent! call cpp#AddCommentBlock()<CR>
-nmap <silent> <LocalLeader>ff :silent! source ~/.vim/fold/c.vim<CR>
+nmap <silent> <buffer> <LocalLeader>m :<c-u>call cpp#RichMake()<CR>
 
-nmap <silent> <LocalLeader>m :call cpp#RichMake()<CR>
-
-nmap <silent> <F2>      :wall<CR>:make .obj/%:r.o<CR>
-nmap          <F4>      :call cpp#RotateTags()<CR>
-nmap <silent> <F10>     :cnext<CR>zvzz
-nmap <silent> <F11>     :cc<CR>zvzz
-nmap <silent> <F12>     :cwindow 5<CR>
-
-" open tag in new window
-nnoremap <C-W>] :vsplit<CR><C-]>zv
-
-let g:c_space_errors=1
+nmap <silent> <buffer> <F2>      :<c-u>wall<CR>:make .obj/%:r.o<CR>
+nmap          <buffer> <F4>      :<c-u>call cpp#RotateTags()<CR>
+nmap <silent> <buffer> <F10>     :<c-u>cnext<CR>zvzz
+nmap <silent> <buffer> <F11>     :<c-u>cc<CR>zvzz
+nmap <silent> <buffer> <F12>     :<c-u>cwindow 5<CR>
 
 " #ifdef 0
-vmap <LocalLeader>0 :call cpp#Ifdef()<CR>
-vmap <LocalLeader>r :call cpp#Ifdef('RAR')<CR>
+vmap <silent> <buffer> <LocalLeader>0 :call cpp#Ifdef()<CR>
+vmap <silent> <buffer> <LocalLeader>r :call cpp#Ifdef('RAR')<CR>
 
-nmap <silent> gcr :setlocal commentstring=//RAR%s<cr><Plug>CommentaryLine:setlocal commentstring=//%s<CR>
+nmap <silent> <buffer> gcr :setlocal commentstring=//RAR%s<cr><Plug>CommentaryLine:setlocal commentstring=//%s<CR>
+
+" open tag in new window
+nnoremap <silent> <buffer> <C-W>]     :<c-u>vsplit<CR><C-]>zv
+nnoremap <silent> <buffer> <C-W><C-]> :<c-u>vsplit<CR><C-]>zv
 
