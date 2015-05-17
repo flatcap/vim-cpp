@@ -50,10 +50,10 @@ function! s:FoldOperator (text)
 	return oper . " (" . type . ")"
 endfunction
 
-function! s:FoldFunction(lnum)
+function! s:FoldFunction (lnum)
 	let text = "Function!"
 	let static = 0
-	for i in range(0,4)
+	for i in range (0, 4)
 		let line = getline (a:lnum+i)
 		if (line =~ '^static.*')
 			let static = 1
@@ -93,9 +93,9 @@ function! s:FoldFunction(lnum)
 	return text
 endfunction
 
-function! s:FoldGetFunctionIcon(lnum)
+function! s:FoldGetFunctionIcon (lnum)
 
-	for i in range(a:lnum,a:lnum+20)
+	for i in range (a:lnum, a:lnum+20)
 		let line = getline(i)
 		if (line =~ '^static.*')
 			return s:function_static
@@ -115,7 +115,7 @@ function! s:FoldGetFunctionIcon(lnum)
 	return s:prefix_function
 endfunction
 
-function! s:FoldCopyright(lnum)
+function! s:FoldCopyright (lnum)
 	if (&foldlevel < 2)
 		return s:prefix_copyright
 	endif
@@ -125,7 +125,7 @@ function! s:FoldCopyright(lnum)
 	return s:prefix_copyright . ' ' . line
 endfunction
 
-function! s:FoldComment(lnum)
+function! s:FoldComment (lnum)
 	let list = []
 	let line = getline (a:lnum)
 
@@ -141,7 +141,7 @@ function! s:FoldComment(lnum)
 
 	" Examine the next three lines
 	for i in range (a:lnum+1, a:lnum+3)
-		let line = getline (i)
+		let line = getline(i)
 		if (line =~ '^\s\+\*\/\s*$')
 			" Found */ stop here
 			break
@@ -160,19 +160,19 @@ function! s:FoldComment(lnum)
 		endif
 	endfor
 
-	let result = space . s:prefix_comment . join(list, " ")
+	let result = space . s:prefix_comment . join (list, " ")
 
 	" Truncate comment to screen width
 	" This doesn't take into account foldcolumn and numberwidth settings
 	let c = min ([winwidth(0), 80]) - 4
-	if (len(result) > c)
+	if (len (result) > c)
 		let result = result[0:c] . "..."
 	endif
 
 	return result
 endfunction
 
-function! s:FoldInclude(line, count)
+function! s:FoldInclude (line, count)
 	if (&foldlevel < 2)
 		return '#include'
 	endif
@@ -190,7 +190,7 @@ function! s:FoldInclude(line, count)
 endfunction
 
 
-function! cpp_fold#FoldLevel(lnum)
+function! cpp_fold#FoldLevel (lnum)
 	let prev = getline (a:lnum - 1)
 	let line = getline (a:lnum)
 	let next = getline (a:lnum + 1)
@@ -276,7 +276,7 @@ function! cpp_fold#FoldLevel(lnum)
 	return level
 endfunction
 
-function! cpp_fold#FoldText(lnum)
+function! cpp_fold#FoldText (lnum)
 	let prev = getline (a:lnum - 1)
 	let line = getline (a:lnum)
 	let next = getline (a:lnum + 1)
@@ -285,11 +285,11 @@ function! cpp_fold#FoldText(lnum)
 
 	if (line =~ "^#include.*")
 		let s = v:foldend - v:foldstart
-		return s:FoldInclude(line, s)
+		return s:FoldInclude (line, s)
 	endif
 
 	if ((line =~ '^/\* Copyright.*'))
-		let text = s:FoldCopyright(a:lnum)
+		let text = s:FoldCopyright (a:lnum)
 		return text
 	endif
 
@@ -314,7 +314,7 @@ function! cpp_fold#FoldText(lnum)
 		return icon . ' ' . next
 	endif
 
-	return s:FoldFunction(a:lnum)
+	return s:FoldFunction (a:lnum)
 endfunction
 
 

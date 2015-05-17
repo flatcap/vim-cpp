@@ -1,4 +1,4 @@
-if exists("b:did_ftplugin")
+if (exists ("b:did_ftplugin"))
 	finish
 endif
 let b:did_ftplugin = 1
@@ -18,7 +18,7 @@ setlocal foldopen+=quickfix
 "setlocal foldopen+=search
 
 " More preferences
-let s:path = expand("%:p")
+let s:path = expand ("%:p")
 if ((s:path =~ '/upstream/') || (s:path =~ '^/usr/include/'))
 	setlocal foldlevel=4
 	setlocal conceallevel=0

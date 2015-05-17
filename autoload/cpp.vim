@@ -24,10 +24,10 @@ function! s:mark_regex (mark, regex, forwards)
 	" W: don't wrap around
 	let l:flags = 'cW'
 	if (a:forwards)
-		call cursor (1,1)
+		call cursor (1, 1)
 		let l:stop = 100
 	else
-		call cursor (100,1)
+		call cursor (100, 1)
 		let l:stop = 1
 		" b: search backwards
 		let l:flags .= 'b'
@@ -62,14 +62,14 @@ function! cpp#GetClassName()
 	let l:name = ''
 	if ((l:suffix == 'h') || (l:suffix == 'hpp'))
 		" Header file - search for class definition
-		call cursor (1,1)
+		call cursor (1, 1)
 		if (search ('^class\>.*[^;]$', 'cW', 0, 100) > 0)
 			let l:class = getline ('.')
 			let l:name = substitute (l:class, 'class\s\+\(\i\+\).*', '\1', '')
 		endif
 	else
 		" Source file - search for constructor
-		call cursor (1,1)
+		call cursor (1, 1)
 		if (search ('\v^(\i+)::\1\s*\(', 'cW', 0, 100) > 0)
 			let l:class = getline ('.')
 			let l:name = substitute (l:class, ':.*', '', '')
@@ -134,7 +134,7 @@ function! cpp#Make()
 	endif
 endfunction
 
-function cpp#MarkImportant()
+function! cpp#MarkImportant()
 	" Mark ctor, dtor, #include, class
 	let l:suffix = expand ('%:e')
 	if ((l:suffix == 'h') || (l:suffix == 'hpp'))
@@ -164,8 +164,8 @@ function! cpp#RotateTags()
 
 	let match = -1
 
-	for key in keys(tagdict)
-		if &tags == tagdict[key]
+	for key in keys (tagdict)
+		if (&tags == tagdict[key])
 			let match = key
 			break
 		endif
