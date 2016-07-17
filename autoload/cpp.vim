@@ -159,7 +159,7 @@ function! cpp#RotateTags()
 	let tagdict = {
 	\	0: "tags",
 	\	1: "tags,/usr/include/tags",
-	\	2: "tags,/usr/include/tags,/usr/src/debug/tags",
+	\	2: "tags,/usr/include/tags,/usr/lib/gcc/x86_64-redhat-linux/6.1.1/include",
 	\ }
 
 	let match = -1
