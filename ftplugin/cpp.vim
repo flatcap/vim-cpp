@@ -12,7 +12,7 @@ setlocal foldtext=cpp_fold#FoldText(v:foldstart)
 setlocal foldcolumn=0
 setlocal foldclose=
 setlocal foldopen=
-setlocal foldopen+=mark
+" setlocal foldopen+=mark
 setlocal foldopen+=tag
 setlocal foldopen+=quickfix
 "setlocal foldopen+=search
@@ -56,11 +56,11 @@ nmap <silent> <buffer> <LocalLeader>fc :<c-u>silent! call cpp#AddCommentBlock()<
 
 nmap <silent> <buffer> <LocalLeader>m :<c-u>call cpp#RichMake()<CR>
 
-nmap <silent> <buffer> <F2>      :<c-u>wall<CR>:make .obj/%:r.o<CR>
-nmap          <buffer> <F4>      :<c-u>call cpp#RotateTags()<CR>
-nmap <silent> <buffer> <F10>     :<c-u>cnext<CR>zvzz
-nmap <silent> <buffer> <F11>     :<c-u>cc<CR>zvzz
-nmap <silent> <buffer> <F12>     :<c-u>cwindow 5<CR>
+" nmap <silent> <buffer> <F2>      :<c-u>wall<CR>:make .obj/%:r.o<CR>
+" nmap          <buffer> <F4>      :<c-u>call cpp#RotateTags()<CR>
+" nmap <silent> <buffer> <F10>     :<c-u>cnext<CR>zvzz
+" nmap <silent> <buffer> <F11>     :<c-u>cc<CR>zvzz
+" nmap <silent> <buffer> <F12>     :<c-u>cwindow 5<CR>
 
 " #ifdef 0
 vmap <silent> <buffer> <LocalLeader>0 :call cpp#Ifdef()<CR>
@@ -72,3 +72,5 @@ nmap <silent> <buffer> gcr :setlocal commentstring=//RAR%s<cr><Plug>CommentaryLi
 nnoremap <silent> <buffer> <C-W>]     :<c-u>vsplit<CR><C-]>zv
 nnoremap <silent> <buffer> <C-W><C-]> :<c-u>vsplit<CR><C-]>zv
 
+set fdl=0
+" set fdm=manual

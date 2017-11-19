@@ -1,7 +1,10 @@
 " Copyright 2001-2015 Richard Russon.
 
-let s:prefix_comment   = '--> '
-let s:prefix_function  = 'F)'
+let s:prefix_comment	= '--> '
+let s:prefix_function	= '●'
+" let s:prefix_struct	= '⏥'
+let s:prefix_struct	= '⧋'
+let s:prefix_enum	= '☰'
 let s:abbreviation     = '...'
 
 let s:prefix_ctor	= 'ctor'
@@ -11,7 +14,8 @@ let s:prefix_copyright	= '© Copyright'
 
 let s:function_method	= '●'
 let s:function_local	= '○'
-let s:function_static	= '∗'
+" let s:function_static	= '∗'
+let s:function_static	= '○'
 
 " TODO:
 "     count the number of function parameters (@arg)
@@ -99,6 +103,10 @@ function! s:FoldGetFunctionIcon (lnum)
 		let line = getline(i)
 		if (line =~ '^static.*')
 			return s:function_static
+		elseif (line =~ '\v^(typedef )*enum.*')
+			return s:prefix_enum
+		elseif (line =~ '\v^(typedef )*struct.*')
+			return s:prefix_struct
 		elseif (line =~ '^__attribute__.*')
 			continue
 		elseif (line =~ '^\i\+::\~*\i\+\s*(.*')
@@ -121,7 +129,7 @@ function! s:FoldCopyright (lnum)
 	endif
 
 	let line = getline (a:lnum)
-	let line = substitute (line, '^/\* Copyright (c) \d\d\d\d\(-\d\d\d\d\)\? ', '', '')
+	let line = substitute (line, '^/\* Copyright ([cC]) \d\d\d\d\(-\d\d\d\d\)\? ', '', '')
 	return s:prefix_copyright . ' ' . line
 endfunction
 
@@ -134,7 +142,7 @@ function! s:FoldComment (lnum)
 	let space = substitute (space, '\t', '        ', 'g')
 
 	" Trim opening comment marker /* or /**
-	let line = substitute (line, '^\s\+/\*\+\s*', '', '')
+	let line = substitute (line, '^\s*/\*\+\s*', '', '')
 	if (!empty (line))
 		let list += [ line ]
 	endif
@@ -142,12 +150,13 @@ function! s:FoldComment (lnum)
 	" Examine the next three lines
 	for i in range (a:lnum+1, a:lnum+3)
 		let line = getline(i)
-		if (line =~ '^\s\+\*\/\s*$')
+		let line = substitute (line, '\v(struct|enum) ', '', '')
+		if (line =~ '^\s*\*\/\s*$')
 			" Found */ stop here
 			break
 		endif
 		" Trim leading whitespace and comment marker *
-		let line = substitute (line, '^\s\+\*\s*', '', '')
+		let line = substitute (line, '^\s*\*\s*', '', '')
 		if (line =~ '.*\*\/\s*$')
 			" Line ends */ trim it and leading whitespace
 			let line = substitute (line, '\*/\s*$', '', '')
@@ -205,6 +214,9 @@ function! cpp_fold#FoldLevel (lnum)
 	endif
 
 	" Ignore one-line C comments
+	if (line =~ '^.*/\*\*<.*$')
+		return '='
+	endif
 	if (line =~ '^\s*/\*.*\*/.*$')
 		return '='
 	endif
@@ -230,7 +242,7 @@ function! cpp_fold#FoldLevel (lnum)
 	elseif (line =~ '^/\*\*$')
 		let level = '>2'
 
-	elseif (line =~ '^\s\+/\*.*$')
+	elseif (line =~ '^\s*/\*.*$')
 		let level = 'a1'
 
 	elseif (line =~ '/\*\( .*\)\?$')
@@ -288,13 +300,9 @@ function! cpp_fold#FoldText (lnum)
 		return s:FoldInclude (line, s)
 	endif
 
-	if ((line =~ '^/\* Copyright.*'))
+	if ((line =~ '^/\* Copyright.*') || (next =~ '^ \* Copyright.*'))
 		let text = s:FoldCopyright (a:lnum)
 		return text
-	endif
-
-	if (line =~ '^\s\+/\*.*')
-		return s:FoldComment (a:lnum)
 	endif
 
 	if ((line =~ '^public:') || (line =~ '^protected:') || (line =~ '^private:'))
@@ -310,11 +318,15 @@ function! cpp_fold#FoldText (lnum)
 	if (line =~ '^/\*\*$')
 		" Function block
 		let next = substitute (next, '^\s\+\*\s*', '', '')
+		let next = substitute (next, '\v<(struct|enum)> *', '', '')
 		let icon = s:FoldGetFunctionIcon (v:foldstart+1)
 		return icon . ' ' . next
 	endif
 
+	if (line =~ '^\s*/\*.*')
+		return s:FoldComment (a:lnum)
+	endif
+
 	return s:FoldFunction (a:lnum)
 endfunction
-
 

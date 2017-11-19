@@ -18,4 +18,5 @@ highlight work_highlight ctermfg=146
 " syntax match cppSmartPtr "\(std::\)\?weak_ptr" conceal cchar=◇
 
 syntax match std_conceal "__\(PRETTY_\)\=FUNCTION__" conceal cchar=ϝ
+syntax match std_conceal "__func__" conceal cchar=ϝ
 

@@ -46,7 +46,7 @@ endfunction
 
 function! cpp#AddCommentBlock()
 	" Create a C function comment
-	let l:func = s:get_function_name()
+	let l:func = cpp#GetFunctionName()
 
 	let @" =  "/**\n" .
 		\ ' * ' . l:func . "\n" .

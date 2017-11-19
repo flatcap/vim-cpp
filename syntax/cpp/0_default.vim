@@ -16,55 +16,55 @@ highlight link cSpecial          cString
 highlight link cSpecialCharacter cString
 highlight link cCharacter        cString
 
-highlight Constant           ctermfg=123
-highlight cConstant          ctermfg=123
-highlight cppStatement       ctermfg=123
-highlight cRepeat            ctermfg=123
-highlight cppExceptions      ctermfg=123
+highlight Constant           ctermfg=123         guifg=#87ffff
+highlight cConstant          ctermfg=123         guifg=#87ffff
+highlight cppStatement       ctermfg=123         guifg=#87ffff
+highlight cRepeat            ctermfg=123         guifg=#87ffff
+highlight cppExceptions      ctermfg=123         guifg=#87ffff
 
-highlight cConditional       ctermfg=123
-highlight cDefine            ctermfg=123
-highlight cInclude           ctermfg=123
-highlight cLabel             ctermfg=123
-highlight cOperator          ctermfg=123
-highlight cPreCondit         ctermfg=123
-highlight cPreProc           ctermfg=123
-highlight cStatement         ctermfg=123
-highlight cStorageClass      ctermfg=123
-highlight cStructure         ctermfg=123
-highlight cType              ctermfg=123
-highlight cUserLabel         ctermfg=123
-highlight cppBoolean         ctermfg=123
-highlight cppClassDecl       ctermfg=123
-highlight cppClassPreDecl    ctermfg=123
-highlight cppMethod          ctermfg=123
-highlight cppScopeDecl       ctermfg=123
-highlight cppStorageClass    ctermfg=123
-highlight cppType            ctermfg=123
+highlight cConditional       ctermfg=123         guifg=#87ffff
+highlight cDefine            ctermfg=123         guifg=#87ffff
+highlight cInclude           ctermfg=123         guifg=#87ffff
+highlight cLabel             ctermfg=123         guifg=#87ffff
+highlight cOperator          ctermfg=123         guifg=#87ffff
+highlight cPreCondit         ctermfg=123         guifg=#87ffff
+highlight cPreProc           ctermfg=123         guifg=#87ffff
+highlight cStatement         ctermfg=123         guifg=#87ffff
+highlight cStorageClass      ctermfg=123         guifg=#87ffff
+highlight cStructure         ctermfg=123         guifg=#87ffff
+highlight cType              ctermfg=123         guifg=#87ffff
+highlight cUserLabel         ctermfg=123         guifg=#87ffff
+highlight cppBoolean         ctermfg=123         guifg=#87ffff
+highlight cppClassDecl       ctermfg=123         guifg=#87ffff
+highlight cppClassPreDecl    ctermfg=123         guifg=#87ffff
+highlight cppMethod          ctermfg=123         guifg=#87ffff
+highlight cppScopeDecl       ctermfg=123         guifg=#87ffff
+highlight cppStorageClass    ctermfg=123         guifg=#87ffff
+highlight cppType            ctermfg=123         guifg=#87ffff
 
-highlight cBitField          ctermfg=none
-highlight cBracket           ctermfg=none
-highlight cErrInBracket      ctermfg=none
-highlight cErrInParen        ctermfg=none
-highlight cError             ctermfg=red cterm=reverse
-highlight cFloat             ctermfg=none
-highlight cMulti             ctermfg=none
-highlight cNumber            ctermfg=none
-highlight cNumbers           ctermfg=none
-highlight cNumbersCom        ctermfg=none
-highlight cOctal             ctermfg=none
-highlight cOctalError        ctermfg=Red
-highlight cOctalZero         ctermfg=none
-highlight cParen             ctermfg=none
-highlight cParenError        ctermfg=Red
-highlight cSpaceError        ctermbg=18
-highlight cSpecialError      ctermfg=none
-highlight cTodo              ctermfg=DarkGreen cterm=reverse
-highlight cUserCont          ctermfg=none
+highlight cBitField          ctermfg=none        guifg=NONE
+highlight cBracket           ctermfg=none        guifg=NONE
+highlight cErrInBracket      ctermfg=none        guifg=NONE
+highlight cErrInParen        ctermfg=none        guifg=NONE
+highlight cError             ctermfg=red         guifg=red cterm=reverse
+highlight cFloat             ctermfg=none        guifg=NONE
+highlight cMulti             ctermfg=none        guifg=NONE
+highlight cNumber            ctermfg=none        guifg=NONE
+highlight cNumbers           ctermfg=none        guifg=NONE
+highlight cNumbersCom        ctermfg=none        guifg=NONE
+highlight cOctal             ctermfg=none        guifg=NONE
+highlight cOctalError        ctermfg=Red         guifg=Red
+highlight cOctalZero         ctermfg=none        guifg=NONE
+highlight cParen             ctermfg=none        guifg=NONE
+highlight cParenError        ctermfg=Red         guifg=Red
+highlight cSpaceError        ctermbg=18          guibg=#000087
+highlight cSpecialError      ctermfg=none        guifg=NONE
+highlight cTodo              ctermfg=DarkGreen   guifg=DarkGreen cterm=reverse
+highlight cUserCont          ctermfg=none        guifg=NONE
 
-highlight cCppBracket        ctermfg=none
-highlight cCppParen          ctermfg=red
-highlight cppNumber          ctermfg=none
+highlight cCppBracket        ctermfg=none        guifg=NONE
+highlight cCppParen          ctermfg=red         guifg=red
+highlight cppNumber          ctermfg=none        guifg=NONE
 
 syntax match rar "// *RAR.*"
 highlight rar ctermfg=207
