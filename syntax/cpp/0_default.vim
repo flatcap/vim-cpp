@@ -59,7 +59,7 @@ highlight cParen             ctermfg=none        guifg=NONE
 highlight cParenError        ctermfg=Red         guifg=Red
 highlight cSpaceError        ctermbg=18          guibg=#000087
 highlight cSpecialError      ctermfg=none        guifg=NONE
-highlight cTodo              ctermfg=DarkGreen   guifg=DarkGreen cterm=reverse
+highlight cTodo              ctermfg=DarkGreen   guifg=#005000 guibg=#000000 cterm=reverse
 highlight cUserCont          ctermfg=none        guifg=NONE
 
 highlight cCppBracket        ctermfg=none        guifg=NONE
