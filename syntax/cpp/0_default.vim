@@ -2,10 +2,10 @@
 
 setlocal   cindent
 setlocal   commentstring=//%s
-setlocal noexpandtab
-setlocal   shiftwidth=8
+setlocal   expandtab
+setlocal   shiftwidth=2
 setlocal   suffixesadd=.h
-setlocal   tabstop=8
+setlocal   tabstop=2
 
 " setlocal cinoptions={.5s,:.5s,+.5s,t0,g0,^-2,e-2,n-2,p2s,(0,=.5s
 " setlocal cinoptions=>4,n-2,{2,^-2,:2,=2,g0,h2,p5,t0,+2,(0,u0,w1,m1
