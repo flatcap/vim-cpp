@@ -183,6 +183,7 @@ function! cpp_fold#FoldText (lnum)
 		" Function block
 		let next = substitute (next, '^\s\+\*\s*', '', '')
 		let next = substitute (next, '\v<(struct|enum)> *', '', '')
+		let next = substitute (next, ' - Implements.*', '', '')
 		let icon = s:FoldGetFunctionIcon (v:foldstart+1)
 
 		if (s:neo_show_lines == 1)
